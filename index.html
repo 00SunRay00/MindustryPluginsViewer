@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mindustry Plugins</title>
+  <style>
+    body {
+      background: #121212;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+    .plugin-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .plugin-card {
+      background: linear-gradient(145deg, #1e1e1e, #101010);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .plugin-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    }
+    .plugin-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .plugin-description {
+      font-size: 0.95rem;
+      color: #bbbbbb;
+      margin-bottom: 1rem;
+    }
+    .plugin-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #00bcd4;
+      color: black;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .plugin-link:hover {
+      background: #0097a7;
+    }
+  </style>
+</head>
+<body>
+  <h1>Список Плагинов Mindustry</h1>
+  <div class="plugin-list" id="pluginList">Loading...</div>
+
+  <script>
+    const url = "https://raw.githubusercontent.com/MindustryInside/MindustryPlugins/refs/heads/master/plugins.json";
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("pluginList");
+        container.innerHTML = "";
+        data.plugins.forEach(plugin => {
+          const card = document.createElement("div");
+          card.className = "plugin-card";
+
+          const title = document.createElement("div");
+          title.className = "plugin-title";
+          title.textContent = plugin.name || "No name";
+
+          const desc = document.createElement("div");
+          desc.className = "plugin-description";
+          desc.textContent = plugin.description || "No description";
+
+          card.appendChild(title);
+          card.appendChild(desc);
+
+          if (plugin.link) {
+            const link = document.createElement("a");
+            link.href = plugin.link;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.className = "plugin-link";
+            link.textContent = "Перейти";
+            card.appendChild(link);
+          }
+
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        document.getElementById("pluginList").innerHTML = "Failed to load data.";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
